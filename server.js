@@ -42,14 +42,16 @@ io.on('connection', function (socket) {
         }
     });
     socket.on('shoot', function (data) {
-        var player = players[socket.id] || {};
-        bullets[socket.id] = {
-            shooter: socket.id,
-            x: player.x,
-            y: player.y,
-            vx: data.x - player.x,
-            vy: data.y - player.y
-        };
+        var player = players[socket.id];
+        if (player) {
+            bullets[socket.id] = {
+                shooter: socket.id,
+                x: player.x,
+                y: player.y,
+                vx: data.x - player.x,
+                vy: data.y - player.y
+            };
+        }
     });
     socket.on('disconnect', function () {
         delete players[socket.id];
@@ -57,20 +59,25 @@ io.on('connection', function (socket) {
 });
 setInterval(function () {
     for (var id in bullets) {
+        console.log(bullets);
         var bullet = bullets[id];
         var vAbs = Math.sqrt(Math.pow(bullet.vx, 2) + Math.pow(bullet.vy, 2));
-        if (vAbs > 7) {
-            bullet.vx *= (1 / vAbs) * 7;
-            bullet.vy *= (1 / vAbs) * 7;
+        if (vAbs > 14) {
+            bullet.vx *= (1 / vAbs) * 14;
+            bullet.vy *= (1 / vAbs) * 14;
         }
         bullet.x += bullet.vx;
         bullet.y += bullet.vy;
+        if (bullet.x  > 800 || bullet.x < 0 || bullet.y > 600 || bullet.y < 0)
+            delete bullets[id];
         // check collisions
         for (var id in players) {
             var player = players[id];
             var dist = Math.sqrt(Math.pow(player.x - bullet.x, 2) + Math.pow(player.y - bullet.y, 2));
-            if (dist < 15 && id != bullet.shooter)
+            if (dist < 15 && id != bullet.shooter) {
                 delete players[id];
+                delete bullets[id];
+            }
         }
     }
     io.sockets.emit('state', {'players': players, 'bullets': bullets});
