@@ -44,6 +44,7 @@ io.on('connection', function(socket) {
   socket.on('shoot', function(data) {
 	var player = players[socket.id] || {};
 	bullets[socket.id] = {
+        shooter: socket.id,
         x: player.x,
         y: player.y,
         vx: data.x-player.x,
@@ -58,12 +59,19 @@ setInterval(function() {
   for (var id in bullets) {
     var bullet = bullets[id];
     var vAbs = Math.sqrt(Math.pow(bullet.vx, 2) + Math.pow(bullet.vy, 2));
-    if (vAbs > 4) {
-      bullet.vx *= (1 / vAbs) * 4;
-      bullet.vy *= (1 / vAbs) * 4;
+    if (vAbs > 7) {
+      bullet.vx *= (1 / vAbs) * 7;
+      bullet.vy *= (1 / vAbs) * 7;
     }
 	bullet.x += bullet.vx;
     bullet.y += bullet.vy;
+    // check collisions
+    for (var id in players) {
+        var player = players[id];
+        var dist = Math.sqrt(Math.pow(player.x-bullet.x, 2) + Math.pow(player.y-bullet.y, 2));
+        if (dist < 15 && id != bullet.shooter)
+            delete players[id];
+    }
   }
   io.sockets.emit('state', {'players': players, 'bullets': bullets});
 }, 1000 / 60);
