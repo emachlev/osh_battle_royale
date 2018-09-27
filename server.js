@@ -59,7 +59,6 @@ io.on('connection', function (socket) {
 });
 setInterval(function () {
     for (var id in bullets) {
-        console.log(bullets);
         var bullet = bullets[id];
         var vAbs = Math.sqrt(Math.pow(bullet.vx, 2) + Math.pow(bullet.vy, 2));
         if (vAbs > 14) {
