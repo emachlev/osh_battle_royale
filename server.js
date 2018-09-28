@@ -74,7 +74,7 @@ io.on('connection', function (socket) {
 
         }
     });
-    socket.on('remove player', function () {
+    socket.on('player killed', function () {
         delete players[socket.id];
         delete bullets[socket.id];
     });

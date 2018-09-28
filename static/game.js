@@ -90,7 +90,7 @@ socket.on('state', function (data) {
         var me = data['players'][socket.id];
         var dist = Math.sqrt(Math.pow(me.x+37 - bullet.x, 2) + Math.pow(me.y+25 - bullet.y, 2));
         if (dist < 60 && socket.id != bullet.shooter) {
-            socket.emit('remove player'); // fixme kill is weird
+            socket.emit('player killed');
             clearInterval(moveInterval);
             if (confirm("You were killed. Respawn?"))
                 location.reload();
