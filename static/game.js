@@ -63,54 +63,60 @@ socket.on('state', function (data) {
     context.clearRect(0, 0, 800, 600);
     for (id in data['players']) {
         let player = data['players'][id];
-        let img = playerImage('n');
-        switch (player.direction) {
-            case 'n':
-                break;
-            case 'ne':
-                img = playerImage('ne');
-                break;
-            case 'e':
-                img = playerImage('e');
-                break;
-            case 'se':
-                img = playerImage('se');
-                break;
-            case 's':
-                img = playerImage('s');
-                break;
-            case 'sw':
-                img = playerImage('sw');
-                break;
-            case 'w':
-                img = playerImage('w');
-                break;
-            case 'nw':
-                img = playerImage('nw');
-                break;
+        let me = data['players'][socket.id];
+        if (me && player.map === data['players'][socket.id].map) {
+            let img = playerImage('n');
+            switch (player.direction) {
+                case 'n':
+                    break;
+                case 'ne':
+                    img = playerImage('ne');
+                    break;
+                case 'e':
+                    img = playerImage('e');
+                    break;
+                case 'se':
+                    img = playerImage('se');
+                    break;
+                case 's':
+                    img = playerImage('s');
+                    break;
+                case 'sw':
+                    img = playerImage('sw');
+                    break;
+                case 'w':
+                    img = playerImage('w');
+                    break;
+                case 'nw':
+                    img = playerImage('nw');
+                    break;
+            }
+            canvas.style.backgroundImage = 'url("static/map/'+me.map+'.jpg")';
+            context.drawImage(img, player.x, player.y);
+            context.fillStyle = 'red';
+            if (id === socket.id)
+                context.fillStyle = 'green';
+            context.fillText(player.nick, player.x + 15, player.y);
         }
-        context.drawImage(img, player.x, player.y);
-        context.fillStyle = 'red';
-        if (id === socket.id)
-            context.fillStyle = 'green';
-        context.fillText(player.nick, player.x + 15, player.y);
     }
     context.fillStyle = 'red';
     for (id in data['bullets']) {
         let bullet = data['bullets'][id];
-        context.beginPath();
-        context.arc(bullet.x, bullet.y, 5, 0, 2 * Math.PI);
-        context.fill();
         let me = data['players'][socket.id];
-        let dist = Math.sqrt(Math.pow(me.x + 37 - bullet.x, 2) + Math.pow(me.y + 25 - bullet.y, 2));
-        if (dist < 60 && socket.id !== bullet.shooter) {
-            socket.emit('player killed');
-            clearInterval(moveInterval);
-            if (confirm("You were killed. Respawn?")) {
-                socket.emit('new player', myNick); // fixme kill is still weird
-                moveInterval = setInterval(function () {
-                    socket.emit('movement', movement);
-                }, 1000 / 60);
+        if (me && bullet.map === me.map) {
+            context.beginPath();
+            context.arc(bullet.x, bullet.y, 5, 0, 2 * Math.PI);
+            context.fill();
+            let dist = Math.sqrt(Math.pow(me.x + 37 - bullet.x, 2) + Math.pow(me.y + 25 - bullet.y, 2));
+            if (dist < 60 && socket.id !== bullet.shooter) {
+                socket.emit('player killed');
+                clearInterval(moveInterval);
+                if (confirm("You were killed. Respawn?")) {
+                    socket.emit('new player', myNick); // fixme kill is still weird
+                    moveInterval = setInterval(function () {
+                        socket.emit('movement', movement);
+                    }, 1000 / 60);
+                }
             }
         }
     }

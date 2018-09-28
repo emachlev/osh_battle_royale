@@ -22,6 +22,7 @@ let bullets = {};
 io.on('connection', function (socket) {
     socket.on('new player', function (data) {
         players[socket.id] = {
+            map: Math.floor(Math.random() * 2) + 1,
             x: Math.floor(Math.random() * 400) + 200,
             y: Math.floor(Math.random() * 400) + 100,
             direction: 'e',
@@ -33,11 +34,21 @@ io.on('connection', function (socket) {
         if (data.left && player.x > 3) {
             player.x -= 3;
         }
+        else if (player.x <= 3 && player.map === 2) {
+            player.map = 1;
+            player.x = 760;
+            player.y = 385;
+        }
         if (data.up && player.y > 3) {
             player.y -= 3;
         }
         if (data.right && player.x < 765) {
             player.x += 3;
+        }
+        else if (player.x >= 765 && player.map === 1) {
+            player.map = 2;
+            player.x = 8;
+            player.y = 220;
         }
         if (data.down && player.y < 560) {
             player.y += 3;
@@ -48,6 +59,7 @@ io.on('connection', function (socket) {
         if (player) {
             bullets[socket.id] = {
                 shooter: socket.id,
+                map: player.map,
                 x: player.x+37,
                 y: player.y+25,
                 vx: data.x - player.x - 37,
