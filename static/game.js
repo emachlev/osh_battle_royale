@@ -116,7 +116,7 @@ socket.on('state', function (data) {
                 movement.down = false;
                 movement.up = false;
                 alert("You were killed by " + data['players'][bullet.shooter].nick + ". Press OK to respawn");
-                socket.emit('new player', myNick); // fixme kill is still weird
+                socket.emit('new player', myNick);
                 moveInterval = setInterval(function () {
                     socket.emit('movement', movement);
                 }, 1000 / 60);
