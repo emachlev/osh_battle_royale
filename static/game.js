@@ -91,7 +91,7 @@ socket.on('state', function (data) {
                     img = playerImage('nw');
                     break;
             }
-            canvas.style.backgroundImage = 'url("static/map/'+me.map+'.jpg")';
+            canvas.style.backgroundImage = 'url("static/map/' + me.map + '.jpg")';
             context.drawImage(img, player.x, player.y);
             context.fillStyle = 'red';
             if (id === socket.id)
@@ -111,12 +111,16 @@ socket.on('state', function (data) {
             if (dist < 50 && socket.id !== bullet.shooter) {
                 socket.emit('player killed', data['players'][bullet.shooter].nick);
                 clearInterval(moveInterval);
-                if (confirm("You were killed by " + data['players'][bullet.shooter].nick + ". Respawn?")) {
-                    socket.emit('new player', myNick); // fixme kill is still weird
-                    moveInterval = setInterval(function () {
-                        socket.emit('movement', movement);
-                    }, 1000 / 60);
-                }
+                movement.left = false;
+                movement.right = false;
+                movement.down = false;
+                movement.up = false;
+                alert("You were killed by " + data['players'][bullet.shooter].nick + ". Press OK to respawn");
+                socket.emit('new player', myNick); // fixme kill is still weird
+                moveInterval = setInterval(function () {
+                    socket.emit('movement', movement);
+                }, 1000 / 60);
+                break;
             }
         }
     }
