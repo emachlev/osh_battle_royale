@@ -34,10 +34,11 @@ io.on('connection', function (socket) {
         if (data.left && player.x > 3) {
             player.x -= 3;
         }
-        else if (player.x <= 3 && player.map === 2) {
-            player.map = 1;
+        else if (player.x <= 3 && player.map !== 1) {
+            player.map--;
             player.x = 760;
-            player.y = 385;
+            if (player.map === 1)
+                player.y = 385;
         }
         if (data.up && player.y > 3) {
             player.y -= 3;
@@ -45,10 +46,11 @@ io.on('connection', function (socket) {
         if (data.right && player.x < 765) {
             player.x += 3;
         }
-        else if (player.x >= 765 && player.map === 1) {
-            player.map = 2;
+        else if (player.x >= 765 && player.map !== 3) {
+            player.map++;
             player.x = 8;
-            player.y = 220;
+            if (player.map === 2)
+                player.y = 220;
         }
         if (data.down && player.y < 560) {
             player.y += 3;
