@@ -5,7 +5,9 @@ var movement = {
     left: false,
     right: false
 };
-var myNick = window.prompt("Enter your nickname:");
+var myNick;
+while (!myNick)
+    myNick = window.prompt("Enter your nickname:");
 document.addEventListener('keydown', function (event) {
     switch (event.keyCode) {
         case 65: // A
