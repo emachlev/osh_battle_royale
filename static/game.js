@@ -41,7 +41,7 @@ document.addEventListener('click', function (event) {
     socket.emit('shoot', {'x': event.clientX, 'y': event.clientY});
 });
 socket.emit('new player');
-setInterval(function () {
+var moveInterval = setInterval(function () {
     socket.emit('movement', movement);
 }, 1000 / 60);
 var canvas = document.getElementById('canvas');
@@ -87,5 +87,13 @@ socket.on('state', function (data) {
         context.beginPath();
         context.arc(bullet.x, bullet.y, 5, 0, 2 * Math.PI);
         context.fill();
+        var me = data['players'][socket.id];
+        var dist = Math.sqrt(Math.pow(me.x+37 - bullet.x, 2) + Math.pow(me.y+25 - bullet.y, 2));
+        if (dist < 60 && socket.id != bullet.shooter) {
+            socket.emit('remove player'); // fixme kill is weird
+            clearInterval(moveInterval);
+            if (confirm("You were killed. Respawn?"))
+                location.reload();
+        }
     }
 });

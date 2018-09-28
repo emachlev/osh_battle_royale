@@ -74,6 +74,10 @@ io.on('connection', function (socket) {
 
         }
     });
+    socket.on('remove player', function () {
+        delete players[socket.id];
+        delete bullets[socket.id];
+    });
     socket.on('disconnect', function () {
         delete players[socket.id];
     });
@@ -90,15 +94,6 @@ setInterval(function () {
         bullet.y += bullet.vy;
         if (bullet.x  > 800 || bullet.x < 0 || bullet.y > 600 || bullet.y < 0)
             delete bullets[id];
-        // check collisions
-        for (var id in players) {
-            var player = players[id];
-            var dist = Math.sqrt(Math.pow(player.x+37 - bullet.x, 2) + Math.pow(player.y+25 - bullet.y, 2));
-            if (dist < 60 && id != bullet.shooter) {
-                delete players[id];
-                delete bullets[id];
-            }
-        }
     }
     io.sockets.emit('state', {'players': players, 'bullets': bullets});
 }, 1000 / 60);
