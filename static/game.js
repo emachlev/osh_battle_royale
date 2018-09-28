@@ -107,7 +107,7 @@ socket.on('state', function (data) {
             socket.emit('player killed');
             clearInterval(moveInterval);
             if (confirm("You were killed. Respawn?")) {
-                socket.emit('new player', myNick);
+                socket.emit('new player', myNick); // fixme kill is still weird
                 moveInterval = setInterval(function () {
                     socket.emit('movement', movement);
                 }, 1000 / 60);
