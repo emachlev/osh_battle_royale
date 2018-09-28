@@ -68,9 +68,9 @@ io.on('connection', function (socket) {
                 player.direction = 'sw';
             if (deg > 150 && deg > -190)
                 player.direction = 'w';
-            if (deg > -190 && deg < -120)
+            if (deg > -190 && deg < -100)
                 player.direction = 'nw';
-            if (deg > -120 && deg < -65)
+            if (deg > -100 && deg < -65)
                 player.direction = 'n';
 
         }
