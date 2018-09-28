@@ -19,6 +19,7 @@ server.listen(5000, function () {
 
 let players = {};
 let bullets = {};
+let scores = {};
 io.on('connection', function (socket) {
     socket.on('new player', function (data) {
         players[socket.id] = {
@@ -26,7 +27,8 @@ io.on('connection', function (socket) {
             x: Math.floor(Math.random() * 400) + 200,
             y: Math.floor(Math.random() * 400) + 100,
             direction: 'e',
-            nick: data
+            nick: data,
+            score: 0
         };
     });
     socket.on('movement', function (data) {
@@ -89,9 +91,10 @@ io.on('connection', function (socket) {
 
         }
     });
-    socket.on('player killed', function () {
+    socket.on('player killed', function (data) {
         delete players[socket.id];
         delete bullets[socket.id];
+        scores[data] = (scores[data] || 0) + 1;
     });
     socket.on('disconnect', function () {
         delete players[socket.id];
@@ -110,5 +113,5 @@ setInterval(function () {
         if (bullet.x  > 800 || bullet.x < 0 || bullet.y > 600 || bullet.y < 0)
             delete bullets[id];
     }
-    io.sockets.emit('state', {'players': players, 'bullets': bullets});
+    io.sockets.emit('state', {'players': players, 'bullets': bullets, 'scores': scores});
 }, 1000 / 60);

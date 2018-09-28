@@ -109,9 +109,9 @@ socket.on('state', function (data) {
             context.fill();
             let dist = Math.sqrt(Math.pow(me.x + 37 - bullet.x, 2) + Math.pow(me.y + 25 - bullet.y, 2));
             if (dist < 60 && socket.id !== bullet.shooter) {
-                socket.emit('player killed');
+                socket.emit('player killed', data['players'][bullet.shooter].nick);
                 clearInterval(moveInterval);
-                if (confirm("You were killed. Respawn?")) {
+                if (confirm("You were killed by " + data['players'][bullet.shooter].nick + ". Respawn?")) {
                     socket.emit('new player', myNick); // fixme kill is still weird
                     moveInterval = setInterval(function () {
                         socket.emit('movement', movement);
@@ -120,4 +120,9 @@ socket.on('state', function (data) {
             }
         }
     }
+    let scoreH = document.getElementById('scores');
+    scoreH.innerHTML = "";
+    for (let nick in data['scores'])
+        scoreH.innerHTML += nick + ": " + data['scores'][nick] + "<br>";
+
 });
