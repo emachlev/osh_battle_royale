@@ -1,13 +1,16 @@
-var socket = io();
-var movement = {
+let socket = io();
+
+let movement = {
     up: false,
     down: false,
     left: false,
     right: false
 };
-var myNick;
+
+let myNick;
 while (!myNick)
     myNick = window.prompt("Enter your nickname:");
+
 document.addEventListener('keydown', function (event) {
     switch (event.keyCode) {
         case 65: // A
@@ -24,6 +27,7 @@ document.addEventListener('keydown', function (event) {
             break;
     }
 });
+
 document.addEventListener('keyup', function (event) {
     switch (event.keyCode) {
         case 65: // A
@@ -40,23 +44,26 @@ document.addEventListener('keyup', function (event) {
             break;
     }
 });
+
 document.addEventListener('click', function (event) {
     socket.emit('shoot', {'x': event.clientX, 'y': event.clientY});
 });
+
 socket.emit('new player', myNick);
-var moveInterval = setInterval(function () {
+let moveInterval = setInterval(function () {
     socket.emit('movement', movement);
 }, 1000 / 60);
-var canvas = document.getElementById('canvas');
+let canvas = document.getElementById('canvas');
 canvas.width = 800;
 canvas.height = 600;
-var context = canvas.getContext('2d');
+let context = canvas.getContext('2d');
 context.font = '14px David';
 socket.on('state', function (data) {
+    let id;
     context.clearRect(0, 0, 800, 600);
-    for (var id in data['players']) {
-        var player = data['players'][id];
-        var img = playerImage('n');
+    for (id in data['players']) {
+        let player = data['players'][id];
+        let img = playerImage('n');
         switch (player.direction) {
             case 'n':
                 break;
@@ -89,14 +96,14 @@ socket.on('state', function (data) {
         context.fillText(player.nick, player.x + 15, player.y);
     }
     context.fillStyle = 'red';
-    for (var id in data['bullets']) {
-        var bullet = data['bullets'][id];
+    for (id in data['bullets']) {
+        let bullet = data['bullets'][id];
         context.beginPath();
         context.arc(bullet.x, bullet.y, 5, 0, 2 * Math.PI);
         context.fill();
-        var me = data['players'][socket.id];
-        var dist = Math.sqrt(Math.pow(me.x + 37 - bullet.x, 2) + Math.pow(me.y + 25 - bullet.y, 2));
-        if (dist < 60 && socket.id != bullet.shooter) {
+        let me = data['players'][socket.id];
+        let dist = Math.sqrt(Math.pow(me.x + 37 - bullet.x, 2) + Math.pow(me.y + 25 - bullet.y, 2));
+        if (dist < 60 && socket.id !== bullet.shooter) {
             socket.emit('player killed');
             clearInterval(moveInterval);
             if (confirm("You were killed. Respawn?")) {

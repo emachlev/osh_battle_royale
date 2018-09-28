@@ -1,11 +1,11 @@
 // Dependencies
-var express = require('express');
-var http = require('http');
-var path = require('path');
-var socketIO = require('socket.io');
-var app = express();
-var server = http.Server(app);
-var io = socketIO(server);
+let express = require('express');
+let http = require('http');
+let path = require('path');
+let socketIO = require('socket.io');
+let app = express();
+let server = http.Server(app);
+let io = socketIO(server);
 app.set('port', 5000);
 app.use('/static', express.static(__dirname + '/static'));
 // Routing
@@ -17,8 +17,8 @@ server.listen(5000, function () {
     console.log('Starting server on port 5000');
 });
 
-var players = {};
-var bullets = {};
+let players = {};
+let bullets = {};
 io.on('connection', function (socket) {
     socket.on('new player', function (data) {
         players[socket.id] = {
@@ -29,7 +29,7 @@ io.on('connection', function (socket) {
         };
     });
     socket.on('movement', function (data) {
-        var player = players[socket.id] || {};
+        let player = players[socket.id] || {};
         if (data.left && player.x > 3) {
             player.x -= 3;
         }
@@ -44,7 +44,7 @@ io.on('connection', function (socket) {
         }
     });
     socket.on('shoot', function (data) {
-        var player = players[socket.id];
+        let player = players[socket.id];
         if (player) {
             bullets[socket.id] = {
                 shooter: socket.id,
@@ -53,9 +53,9 @@ io.on('connection', function (socket) {
                 vx: data.x - player.x - 37,
                 vy: data.y - player.y - 25
             };
-            var vx = bullets[socket.id].vx;
-            var vy = bullets[socket.id].vy;
-            var deg = Math.atan2(vy, vx) * (180/Math.PI);
+            let vx = bullets[socket.id].vx;
+            let vy = bullets[socket.id].vy;
+            let deg = Math.atan2(vy, vx) * (180 / Math.PI);
             if (deg > -65 && deg < -15)
                 player.direction = 'ne';
             if (deg > -15 && deg < 35)
@@ -84,9 +84,9 @@ io.on('connection', function (socket) {
     });
 });
 setInterval(function () {
-    for (var id in bullets) {
-        var bullet = bullets[id];
-        var vAbs = Math.sqrt(Math.pow(bullet.vx, 2) + Math.pow(bullet.vy, 2));
+    for (let id in bullets) {
+        let bullet = bullets[id];
+        let vAbs = Math.sqrt(Math.pow(bullet.vx, 2) + Math.pow(bullet.vy, 2));
         if (vAbs > 14) {
             bullet.vx *= (1 / vAbs) * 14;
             bullet.vy *= (1 / vAbs) * 14;
