@@ -27,8 +27,7 @@ io.on('connection', function (socket) {
             x: Math.floor(Math.random() * 400) + 200,
             y: Math.floor(Math.random() * 400) + 100,
             direction: 'e',
-            nick: data,
-            score: 0
+            nick: data
         };
     });
     socket.on('movement', function (data) {
