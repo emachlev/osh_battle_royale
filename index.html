@@ -6,12 +6,22 @@
             width: 800px;
             height: 600px;
             border: 5px solid black;
+            background-image: url("static/map/1.jpg");
         }
     </style>
     <script src="/socket.io/socket.io.js"></script>
 </head>
 <body>
+<img id="player_e" src="static/player/player_e.png" style="display: none">
+<img id="player_se" src="static/player/player_se.png" style="display: none">
+<img id="player_s" src="static/player/player_s.png" style="display: none">
+<img id="player_sw" src="static/player/player_sw.png" style="display: none">
+<img id="player_w" src="static/player/player_w.png" style="display: none">
+<img id="player_nw" src="static/player/player_nw.png" style="display: none">
+<img id="player_n" src="static/player/player_n.png" style="display: none">
+<img id="player_ne" src="static/player/player_ne.png" style="display: none">
 <canvas id="canvas"></canvas>
 </body>
+<script src="/static/helpers.js"></script>
 <script src="/static/game.js"></script>
 </html>

@@ -4,7 +4,7 @@ var movement = {
     down: false,
     left: false,
     right: false
-}
+};
 document.addEventListener('keydown', function (event) {
     switch (event.keyCode) {
         case 65: // A
@@ -53,9 +53,33 @@ socket.on('state', function (data) {
     context.fillStyle = 'green';
     for (var id in data['players']) {
         var player = data['players'][id];
-        context.beginPath();
-        context.arc(player.x, player.y, 10, 0, 2 * Math.PI);
-        context.fill();
+        var img = playerImage('n');
+        switch (player.direction) {
+            case 'n':
+                break;
+            case 'ne':
+                img = playerImage('ne');
+                break;
+            case 'e':
+                img = playerImage('e');
+                break;
+            case 'se':
+                img = playerImage('se');
+                break;
+            case 's':
+                img = playerImage('s');
+                break;
+            case 'sw':
+                img = playerImage('sw');
+                break;
+            case 'w':
+                img = playerImage('w');
+                break;
+            case 'nw':
+                img = playerImage('nw');
+                break;
+        }
+        context.drawImage(img, player.x, player.y);
     }
     context.fillStyle = 'red';
     for (var id in data['bullets']) {

@@ -23,22 +23,23 @@ io.on('connection', function (socket) {
     socket.on('new player', function () {
         players[socket.id] = {
             x: 300,
-            y: 300
+            y: 300,
+            direction: 'e'
         };
     });
     socket.on('movement', function (data) {
         var player = players[socket.id] || {};
         if (data.left) {
-            player.x -= 5;
+            player.x -= 3;
         }
         if (data.up) {
-            player.y -= 5;
+            player.y -= 3;
         }
         if (data.right) {
-            player.x += 5;
+            player.x += 3;
         }
         if (data.down) {
-            player.y += 5;
+            player.y += 3;
         }
     });
     socket.on('shoot', function (data) {
@@ -46,11 +47,31 @@ io.on('connection', function (socket) {
         if (player) {
             bullets[socket.id] = {
                 shooter: socket.id,
-                x: player.x,
-                y: player.y,
+                x: player.x+37,
+                y: player.y+25,
                 vx: data.x - player.x,
                 vy: data.y - player.y
             };
+            var vx = bullets[socket.id].vx;
+            var vy = bullets[socket.id].vy;
+            var deg = Math.atan2(vy, vx) * (180/Math.PI);
+            if (deg > -65 && deg < -35)
+                player.direction = 'ne';
+            if (deg > -35 && deg < 35)
+                player.direction = 'e';
+            if (deg > 35 && deg < 75)
+                player.direction = 'se';
+            if (deg > 75 && deg < 105)
+                player.direction = 's';
+            if (deg > 105 && deg < 150)
+                player.direction = 'sw';
+            if (deg > 150 && deg > -190)
+                player.direction = 'w';
+            if (deg > -190 && deg < -120)
+                player.direction = 'nw';
+            if (deg > -120 && deg < -65)
+                player.direction = 'n';
+
         }
     });
     socket.on('disconnect', function () {
@@ -72,8 +93,8 @@ setInterval(function () {
         // check collisions
         for (var id in players) {
             var player = players[id];
-            var dist = Math.sqrt(Math.pow(player.x - bullet.x, 2) + Math.pow(player.y - bullet.y, 2));
-            if (dist < 15 && id != bullet.shooter) {
+            var dist = Math.sqrt(Math.pow(player.x+37 - bullet.x, 2) + Math.pow(player.y+25 - bullet.y, 2));
+            if (dist < 60 && id != bullet.shooter) {
                 delete players[id];
                 delete bullets[id];
             }
