@@ -5,6 +5,7 @@ var movement = {
     left: false,
     right: false
 };
+var myNick = window.prompt("Enter your nickname:");
 document.addEventListener('keydown', function (event) {
     switch (event.keyCode) {
         case 65: // A
@@ -40,7 +41,7 @@ document.addEventListener('keyup', function (event) {
 document.addEventListener('click', function (event) {
     socket.emit('shoot', {'x': event.clientX, 'y': event.clientY});
 });
-socket.emit('new player');
+socket.emit('new player', myNick);
 var moveInterval = setInterval(function () {
     socket.emit('movement', movement);
 }, 1000 / 60);
@@ -48,9 +49,9 @@ var canvas = document.getElementById('canvas');
 canvas.width = 800;
 canvas.height = 600;
 var context = canvas.getContext('2d');
+context.font = '14px David';
 socket.on('state', function (data) {
     context.clearRect(0, 0, 800, 600);
-    context.fillStyle = 'green';
     for (var id in data['players']) {
         var player = data['players'][id];
         var img = playerImage('n');
@@ -80,6 +81,10 @@ socket.on('state', function (data) {
                 break;
         }
         context.drawImage(img, player.x, player.y);
+        context.fillStyle = 'red';
+        if (id === socket.id)
+            context.fillStyle = 'green';
+        context.fillText(player.nick, player.x + 15, player.y);
     }
     context.fillStyle = 'red';
     for (var id in data['bullets']) {
@@ -88,12 +93,16 @@ socket.on('state', function (data) {
         context.arc(bullet.x, bullet.y, 5, 0, 2 * Math.PI);
         context.fill();
         var me = data['players'][socket.id];
-        var dist = Math.sqrt(Math.pow(me.x+37 - bullet.x, 2) + Math.pow(me.y+25 - bullet.y, 2));
+        var dist = Math.sqrt(Math.pow(me.x + 37 - bullet.x, 2) + Math.pow(me.y + 25 - bullet.y, 2));
         if (dist < 60 && socket.id != bullet.shooter) {
             socket.emit('player killed');
             clearInterval(moveInterval);
-            if (confirm("You were killed. Respawn?"))
-                location.reload();
+            if (confirm("You were killed. Respawn?")) {
+                socket.emit('new player', myNick);
+                moveInterval = setInterval(function () {
+                    socket.emit('movement', movement);
+                }, 1000 / 60);
+            }
         }
     }
 });

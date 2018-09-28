@@ -20,11 +20,12 @@ server.listen(5000, function () {
 var players = {};
 var bullets = {};
 io.on('connection', function (socket) {
-    socket.on('new player', function () {
+    socket.on('new player', function (data) {
         players[socket.id] = {
             x: Math.floor(Math.random() * 400) + 200,
             y: Math.floor(Math.random() * 400) + 100,
-            direction: 'e'
+            direction: 'e',
+            nick: data
         };
     });
     socket.on('movement', function (data) {
