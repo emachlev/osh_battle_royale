@@ -108,7 +108,7 @@ socket.on('state', function (data) {
             context.arc(bullet.x, bullet.y, 5, 0, 2 * Math.PI);
             context.fill();
             let dist = Math.sqrt(Math.pow(me.x + 37 - bullet.x, 2) + Math.pow(me.y + 25 - bullet.y, 2));
-            if (dist < 60 && socket.id !== bullet.shooter) {
+            if (dist < 50 && socket.id !== bullet.shooter) {
                 socket.emit('player killed', data['players'][bullet.shooter].nick);
                 clearInterval(moveInterval);
                 if (confirm("You were killed by " + data['players'][bullet.shooter].nick + ". Respawn?")) {
