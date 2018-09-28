@@ -2,6 +2,11 @@
 <head>
     <title>OSH Battlegrounds</title>
     <style>
+        body {
+            background: url('static/bg.jpg') no-repeat center center;
+            background-size: cover;
+        }
+
         canvas {
             width: 800px;
             height: 600px;
@@ -20,7 +25,9 @@
 <img id="player_n" src="static/player/player_n.png" style="display: none">
 <img id="player_ne" src="static/player/player_ne.png" style="display: none">
 <canvas id="canvas"></canvas>
-<h2 id="scores" style="float: right">SCOREBOARD:<br><br></h2>
+<div style="background: #FFFFFF; float: right">
+    <h2 id="scores"></h2>
+</div>
 </body>
 <script src="/static/helpers.js"></script>
 <script src="/static/game.js"></script>
