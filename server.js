@@ -22,8 +22,8 @@ var bullets = {};
 io.on('connection', function (socket) {
     socket.on('new player', function () {
         players[socket.id] = {
-            x: 300,
-            y: 300,
+            x: Math.floor(Math.random() * 400) + 200,
+            y: Math.floor(Math.random() * 400) + 100,
             direction: 'e'
         };
     });
@@ -49,8 +49,8 @@ io.on('connection', function (socket) {
                 shooter: socket.id,
                 x: player.x+37,
                 y: player.y+25,
-                vx: data.x - player.x,
-                vy: data.y - player.y
+                vx: data.x - player.x - 37,
+                vy: data.y - player.y - 25
             };
             var vx = bullets[socket.id].vx;
             var vy = bullets[socket.id].vy;
