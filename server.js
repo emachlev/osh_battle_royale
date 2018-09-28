@@ -55,9 +55,9 @@ io.on('connection', function (socket) {
             var vx = bullets[socket.id].vx;
             var vy = bullets[socket.id].vy;
             var deg = Math.atan2(vy, vx) * (180/Math.PI);
-            if (deg > -65 && deg < -35)
+            if (deg > -65 && deg < -15)
                 player.direction = 'ne';
-            if (deg > -35 && deg < 35)
+            if (deg > -15 && deg < 35)
                 player.direction = 'e';
             if (deg > 35 && deg < 75)
                 player.direction = 'se';
