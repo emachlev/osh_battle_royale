@@ -1,4 +1,4 @@
-# osh_battle_royale
+# Ohel-Shem Battlegrounds
 Become the last survivor in Ohel-Shem school
 
 oshhack5.devpost.com
