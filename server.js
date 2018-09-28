@@ -30,16 +30,16 @@ io.on('connection', function (socket) {
     });
     socket.on('movement', function (data) {
         var player = players[socket.id] || {};
-        if (data.left) {
+        if (data.left && player.x > 3) {
             player.x -= 3;
         }
-        if (data.up) {
+        if (data.up && player.y > 3) {
             player.y -= 3;
         }
-        if (data.right) {
+        if (data.right && player.x < 765) {
             player.x += 3;
         }
-        if (data.down) {
+        if (data.down && player.y < 560) {
             player.y += 3;
         }
     });
